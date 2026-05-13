@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoKZ — Қазақстанның №1 Авто Маркеті</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@300;400;600;700;800&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold: #4221ff;
+      --gold2: #5165ff;
+      --dark: #0a0a12;
+      --dark2: #111120;
+      --dark3: #1a1a2e;
+      --card: #13131f;
+      --card2: #1c1c2e;
+      --text: #f0f0f8;
+      --muted: #8888aa;
+      --accent: #e03060;
+      --green: #22c55e;
+      --blue: #3b82f6;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: "Nunito", system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark2); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+    a, button { cursor: pointer; }
+    input, textarea, select { cursor: text; }
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: var(--dark);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      transition: opacity 0.5s;
+    }
+    .loader-logo {
+      font-family: "Orbitron", sans-serif;
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 4px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    .loader-bar { width: 200px; height: 3px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; overflow: hidden; }
+    .loader-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold2)); border-radius: 2px; animation: loadbar 1.8s ease forwards; }
+    @keyframes loadbar { 0% { width: 0%; } 100% { width: 100%; } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+    #particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.2; }
+      100% { transform: translateY(-10vh) translateX(40px); opacity: 0; }
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 40px;
+      background: rgba(10, 10, 18, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(212, 160, 23, 0.15);
+      transition: all 0.3s;
+    }
+    .header-inner { display: flex; align-items: center; height: 70px; gap: 20px; }
+    .logo {
+      font-family: "Orbitron", sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .logo span { color: var(--text); font-weight: 400; }
+    nav { display: flex; gap: 28px; margin-left: auto; }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+      position: relative;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+    nav a:hover { color: var(--text); }
+    nav a:hover::after { width: 100%; }
+    .header-contacts { display: flex; align-items: center; gap: 16px; margin-left: 24px; flex-wrap: wrap; justify-content: flex-end; }
+    .header-phone {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-whatsapp {
+      background: var(--green);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-whatsapp:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4); }
+    .btn-login-header {
+      background: rgba(66, 33, 255, 0.15);
+      color: var(--gold);
+      padding: 8px 18px;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid rgba(66, 33, 255, 0.3);
+      transition: all 0.2s;
+    }
+    .btn-login-header:hover { background: rgba(66, 33, 255, 0.25); }
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text);
+      font-size: 22px;
+      border-radius: 12px;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .drawer {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .drawer.open { pointer-events: auto; opacity: 1; }
+    .drawer-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); }
+    .drawer-panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: min(92vw, 340px);
+      background: rgba(10, 10, 18, 0.96);
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      transform: translateX(105%);
+      transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+      padding: 18px;
+      backdrop-filter: blur(16px);
+    }
+    .drawer.open .drawer-panel { transform: translateX(0); }
+    .drawer a {
+      display: block;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-top: 10px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .drawer a:hover { border-color: rgba(66, 33, 255, 0.35); }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding-top: 70px;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 60% 50%, rgba(212, 160, 23, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 10% 80%, rgba(224, 48, 96, 0.06) 0%, transparent 50%),
+        linear-gradient(135deg, #0a0a12 0%, #111120 50%, #0f0f1e 100%);
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(212, 160, 23, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212, 160, 23, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+    }
+    @keyframes gridMove { 0% { transform: translateY(0); } 100% { transform: translateY(60px); } }
+    .hero-content { position: relative; z-index: 2; padding: 0 40px; max-width: 650px; animation: heroIn 1s ease both; }
+    @keyframes heroIn { 0% { opacity: 0; transform: translateX(-50px); } 100% { opacity: 1; transform: translateX(0); } }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(212, 160, 23, 0.1);
+      border: 1px solid rgba(212, 160, 23, 0.3);
+      color: var(--gold);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: blink 1.5s ease infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    .hero h1 {
+      font-family: "Rajdhani", sans-serif;
+      font-size: clamp(42px, 6vw, 80px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+    .hero h1 .line1 { display: block; color: var(--text); }
+    .hero h1 .line2 { display: block; color: var(--gold); -webkit-text-stroke: 1px var(--gold); }
+    .hero h1 .line3 { display: block; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3); }
+    .hero-desc { font-size: 16px; color: var(--muted); line-height: 1.7; margin-bottom: 36px; max-width: 480px; }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 48px; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+      border: none;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(66, 33, 255, 0.4); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.3s;
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+    .hero-stats { display: flex; gap: 36px; flex-wrap: wrap; }
+    .stat-item { text-align: left; }
+    .stat-num { font-family: "Orbitron", sans-serif; font-size: 28px; font-weight: 700; color: var(--gold); line-height: 1; }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .hero-car { position: absolute; right: -5%; bottom: 0; width: 65%; max-width: 900px; z-index: 1; animation: carFloat 4s ease-in-out infinite; }
+    @keyframes carFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+    .hero-car img { width: 100%; object-fit: contain; filter: drop-shadow(0 20px 60px rgba(212, 160, 23, 0.25)); }
+    .hero-car-glow {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 30px;
+      background: radial-gradient(ellipse, rgba(212, 160, 23, 0.3) 0%, transparent 70%);
+      filter: blur(10px);
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      animation: bounce 2s ease infinite;
+    }
+    @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+    .scroll-arrow { width: 20px; height: 20px; border-right: 2px solid var(--gold); border-bottom: 2px solid var(--gold); transform: rotate(45deg); }
+
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; gap: 12px; flex-wrap: wrap; }
+    .section-title { font-family: "Rajdhani", sans-serif; font-size: 32px; font-weight: 700; color: var(--text); }
+    .section-title span { color: var(--gold); }
+    .see-all {
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(212, 160, 23, 0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .see-all:hover { background: rgba(212, 160, 23, 0.1); }
+
+    .cars-section { padding: 20px 40px 60px; }
+    .filter-tabs { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+    .filter-tab {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--muted);
+      padding: 8px 20px;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: "Nunito", sans-serif;
+    }
+    .filter-tab.active,
+    .filter-tab:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
+    .cars-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .car-card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.35s;
+      position: relative;
+      animation: cardIn 0.6s both;
+    }
+    @keyframes cardIn { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+    .car-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(212, 160, 23, 0.4);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 160, 23, 0.15);
+    }
+    .car-img-wrap { position: relative; height: 180px; overflow: hidden; background: linear-gradient(135deg, #151525, #1e1e35); }
+    .car-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .car-card:hover .car-img-wrap img { transform: scale(1.06); }
+    .car-badges { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; }
+    .badge-new { background: rgba(34, 197, 94, 0.15); color: var(--green); border: 1px solid rgba(34, 197, 94, 0.3); }
+    .badge-hot { background: rgba(224, 48, 96, 0.15); color: var(--accent); border: 1px solid rgba(224, 48, 96, 0.3); }
+    .badge-credit { background: rgba(59, 130, 246, 0.15); color: var(--blue); border: 1px solid rgba(59, 130, 246, 0.3); }
+    .car-favorite {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    .car-favorite:hover { background: rgba(224, 48, 96, 0.2); border-color: var(--accent); }
+    .car-info { padding: 16px; }
+    .car-name { font-family: "Rajdhani", sans-serif; font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .car-meta { font-size: 13px; color: var(--muted); margin-bottom: 12px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .car-meta span { display: flex; align-items: center; gap: 4px; }
+    .car-price { font-family: "Orbitron", sans-serif; font-size: 20px; font-weight: 700; color: var(--gold); margin-bottom: 12px; }
+    .car-specs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .spec { background: var(--dark2); color: var(--muted); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; }
+    .car-actions { display: flex; gap: 8px; }
+    .btn-card-primary {
+      flex: 1;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-card-primary:hover { transform: scale(1.03); box-shadow: 0 4px 15px rgba(66, 33, 255, 0.4); }
+    .btn-card-wa {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--green);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-card-wa:hover { background: rgba(34, 197, 94, 0.2); }
+
+    .features-section { padding: 40px 40px 60px; background: linear-gradient(180deg, transparent, rgba(212, 160, 23, 0.03), transparent); }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 28px 24px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(212, 160, 23, 0.04), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .feature-card:hover { border-color: rgba(212, 160, 23, 0.3); transform: translateY(-4px); }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(212, 160, 23, 0.1);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(212, 160, 23, 0.2);
+    }
+    .feature-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .feature-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .feature-stat { font-family: "Orbitron", sans-serif; font-size: 22px; font-weight: 700; color: var(--gold); margin-top: 12px; }
+
+    .address-section { padding: 0 40px 60px; }
+    .address-card {
+      background: var(--card);
+      border: 1px solid rgba(212, 160, 23, 0.2);
+      border-radius: 24px;
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .address-card::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(212, 160, 23, 0.05), transparent);
+      pointer-events: none;
+    }
+    .address-info h2 { font-family: "Rajdhani", sans-serif; font-size: 32px; font-weight: 700; color: var(--text); margin-bottom: 24px; }
+    .address-info h2 span { color: var(--gold); }
+    .address-row { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 20px; }
+    .address-icon {
+      width: 42px;
+      height: 42px;
+      background: rgba(212, 160, 23, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      border: 1px solid rgba(212, 160, 23, 0.2);
+    }
+    .address-text strong { display: block; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .address-text span { font-size: 13px; color: var(--muted); }
+    .address-wa-block { background: rgba(34, 197, 94, 0.06); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 16px; padding: 20px; margin-top: 24px; }
+    .address-wa-block p { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+    .btn-wa-big {
+      background: var(--green);
+      color: #fff;
+      padding: 13px 28px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s;
+    }
+    .btn-wa-big:hover { transform: scale(1.04); box-shadow: 0 6px 24px rgba(34, 197, 94, 0.35); }
+    .address-map { background: var(--dark2); border-radius: 16px; overflow: hidden; position: relative; min-height: 300px; border: 1px solid rgba(255, 255, 255, 0.06); }
+    .map-iframe { width: 100%; height: 100%; min-height: 300px; border: 0; filter: saturate(1.05) contrast(1.05); }
+
+    .reviews-section { padding: 40px 40px 60px; }
+    .reviews-scroll { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; margin-bottom: 32px; }
+    .reviews-scroll::-webkit-scrollbar { display: none; }
+    .review-card {
+      flex-shrink: 0;
+      width: 300px;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 24px;
+      transition: all 0.3s;
+    }
+    .review-card:hover { border-color: rgba(212, 160, 23, 0.3); transform: translateY(-4px); }
+    .review-stars { color: var(--gold); font-size: 14px; margin-bottom: 12px; letter-spacing: 2px; }
+    .review-text { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+    .review-author { display: flex; align-items: center; gap: 12px; }
+    .review-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      color: #fff;
+    }
+    .review-name { font-weight: 700; font-size: 14px; color: var(--text); }
+    .review-date { font-size: 12px; color: var(--muted); }
+    .review-car { font-size: 12px; color: var(--gold); margin-top: 2px; }
+    .add-review-btn {
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #fff;
+      padding: 13px 28px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+      margin-top: 8px;
+    }
+    .add-review-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(66, 33, 255, 0.4); }
+
+    .cta-section { padding: 0 40px 60px; }
+    .cta-card {
+      background: linear-gradient(135deg, var(--card), #1a1020);
+      border: 1px solid rgba(212, 160, 23, 0.25);
+      border-radius: 24px;
+      padding: 60px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-card::before {
+      content: "";
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(212, 160, 23, 0.08), transparent);
+      pointer-events: none;
+    }
+    .cta-title { font-family: "Rajdhani", sans-serif; font-size: 42px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+    .cta-title span { color: var(--gold); }
+    .cta-desc { font-size: 16px; color: var(--muted); margin-bottom: 32px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    footer { background: var(--dark2); border-top: 1px solid rgba(212, 160, 23, 0.1); padding: 50px 40px 30px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-brand .logo { font-size: 28px; display: inline-block; margin-bottom: 16px; }
+    .footer-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+    .footer-socials { display: flex; gap: 10px; }
+    .social-btn {
+      width: 36px;
+      height: 36px;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .social-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .footer-col h4 { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-col a { display: block; color: var(--muted); text-decoration: none; font-size: 13px; margin-bottom: 10px; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--gold); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .footer-bottom a { color: var(--muted); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--gold); }
+
+    .wa-float { position: fixed; bottom: 28px; right: 28px; z-index: 200; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+    .wa-tooltip {
+      background: var(--card);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: all 0.2s;
+    }
+    .wa-float:hover .wa-tooltip { opacity: 1; transform: translateX(0); }
+    .wa-btn {
+      width: 58px;
+      height: 58px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.35), 0 0 0 0 rgba(34, 197, 94, 0.4);
+      animation: waPulse 3s ease infinite;
+      text-decoration: none;
+    }
+    @keyframes waPulse {
+      0%, 100% { box-shadow: 0 4px 20px rgba(34, 197, 94, 0.35), 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      50% { box-shadow: 0 4px 20px rgba(34, 197, 94, 0.35), 0 0 0 16px rgba(34, 197, 94, 0); }
+    }
+    .wa-btn svg { width: 28px; height: 28px; }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      backdrop-filter: blur(8px);
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--card2);
+      border: 1px solid rgba(212, 160, 23, 0.25);
+      border-radius: 24px;
+      padding: 36px;
+      max-width: 560px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(30px);
+      transition: transform 0.3s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-close {
+      float: right;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal h3 { font-family: "Rajdhani", sans-serif; font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .modal-car { font-size: 14px; color: var(--gold); margin-bottom: 24px; font-weight: 600; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.3px; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: var(--dark2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: "Nunito", sans-serif;
+      font-weight: 600;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--gold); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #fff;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      border: none;
+      margin-top: 8px;
+      transition: all 0.3s;
+    }
+    .btn-submit:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(66, 33, 255, 0.4); }
+
+    .auth-tabs { display: flex; gap: 0; margin-bottom: 24px; background: var(--dark2); border-radius: 12px; padding: 4px; }
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      font-family: "Nunito", sans-serif;
+      transition: all 0.2s;
+    }
+    .auth-tab.active { background: var(--gold); color: #fff; }
+
+    .star-rating { display: flex; gap: 8px; margin-bottom: 4px; }
+    .star-btn { background: none; border: none; font-size: 28px; color: rgba(255, 255, 255, 0.2); transition: all 0.15s; line-height: 1; }
+    .star-btn.active,
+    .star-btn:hover { color: #fbbf24; }
+
+    .user-badge { display: flex; align-items: center; gap: 8px; background: rgba(66, 33, 255, 0.12); border: 1px solid rgba(66, 33, 255, 0.25); border-radius: 25px; padding: 6px 14px; font-size: 13px; font-weight: 700; color: var(--gold); }
+    .user-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; }
+
+    .notify {
+      position: fixed;
+      top: 90px;
+      right: 28px;
+      z-index: 600;
+      background: var(--card);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: min(92vw, 420px);
+    }
+    .notify.show { transform: translateX(0); }
+
+    @media (max-width: 1024px) {
+      .hero-car { width: 55%; right: -8%; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .address-card { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      header { padding: 0 20px; }
+      nav { display: none; }
+      .menu-toggle { display: flex; }
+      .header-contacts { margin-left: auto; }
+      .hero-content { padding: 0 20px; }
+      .hero-car { display: none; }
+      .hero h1 { font-size: 38px; }
+      .cars-section,
+      .features-section,
+      .address-section,
+      .reviews-section,
+      .cta-section,
+      footer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .cta-card { padding: 36px 24px; }
+      .cta-title { font-size: 28px; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loader">
+    <div class="loader-logo">AUTO<span style="color: #fff; font-weight: 400">KZ</span></div>
+    <div style="color: #8888aa; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; margin-top: -10px">Жүктелуде...</div>
+    <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+  </div>
+
+  <div id="particles"></div>
+
+  <div class="wa-float">
+    <div class="wa-tooltip">WhatsApp</div>
+    <a href="https://wa.me/77073338497" target="_blank" rel="noopener" class="wa-btn" aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="white" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12 2a10 10 0 00-8.485 15.26L2 22l4.88-1.49A10 10 0 1012 2z"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="notify" id="notify"><span>OK</span> <span id="notify-text">Сәтті!</span></div>
+
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-backdrop" id="drawerBackdrop"></div>
+    <div class="drawer-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+        <div class="logo" style="font-size: 20px">AUTO<span>KZ</span></div>
+        <button class="modal-close" id="drawerClose" type="button" aria-label="Жабу">✕</button>
+      </div>
+      <a href="#cars">Каталог</a>
+      <a href="#features">Артықшылықтар</a>
+      <a href="#address">Мекенжай</a>
+      <a href="#reviews">Пікірлер</a>
+      <a href="#contact">Байланыс</a>
+      <a href="https://wa.me/77073338497" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <button class="modal-close" type="button" onclick="closeModal()">✕</button>
+      <h3>Тапсырыс беру</h3>
+      <div class="modal-car" id="modal-car-name">Toyota Camry 2023</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Аты-жөніңіз</label>
+          <input id="ord-name" type="text" placeholder="Мысалы: Алмас" />
+        </div>
+        <div class="form-group">
+          <label>Телефон</label>
+          <input id="ord-phone" type="tel" placeholder="+7 (___) ___-__-__" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Байланыс түрі</label>
+        <select id="ord-channel">
+          <option>WhatsApp арқылы</option>
+          <option>Қоңырау шалу</option>
+          <option>Telegram арқылы</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Сұрақ немесе ескертпе</label>
+        <textarea id="ord-msg" placeholder="Сұрақтарыңызды жазыңыз..."></textarea>
+      </div>
+      <button class="btn-submit" type="button" onclick="submitOrder()">Жіберу</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="authModal">
+    <div class="modal" style="max-width: 460px">
+      <button class="modal-close" type="button" onclick="closeAuthModal()">✕</button>
+      <h3 id="authTitle">Тіркелу</h3>
+      <div style="font-size: 13px; color: var(--muted); margin-bottom: 20px">AutoKZ аккаунты арқылы пікір қалдыра аласыз</div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabRegister" type="button" onclick="switchTab('register')">Тіркелу</button>
+        <button class="auth-tab" id="tabLogin" type="button" onclick="switchTab('login')">Кіру</button>
+      </div>
+
+      <div id="registerForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Аты-жөні</label>
+            <input id="reg-name" type="text" placeholder="Мысалы: Алмас" />
+          </div>
+          <div class="form-group">
+            <label>Телефон</label>
+            <input id="reg-phone" type="tel" placeholder="+7 (___) ___-__-__" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input id="reg-email" type="email" placeholder="email@example.com" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Құпия сөз</label>
+            <input id="reg-pass" type="password" placeholder="Кемінде 6 таңба" />
+          </div>
+          <div class="form-group">
+            <label>Қайталаңыз</label>
+            <input id="reg-pass2" type="password" placeholder="Қайталаңыз" />
+          </div>
+        </div>
+        <div style="font-size: 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.6">
+          Тіркелу арқылы сіз <span style="color: var(--gold)">Пайдалану шарттарымен</span> келісесіз
+        </div>
+        <button class="btn-submit" type="button" onclick="register()">Тіркелу</button>
+      </div>
+
+      <div id="loginForm" style="display: none">
+        <div class="form-group">
+          <label>Email немесе телефон</label>
+          <input id="login-id" type="text" placeholder="email@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Құпия сөз</label>
+          <input id="login-pass" type="password" placeholder="Құпия сөзіңіз" />
+        </div>
+        <div style="text-align: right; margin-bottom: 16px">
+          <span style="font-size: 13px; color: var(--gold); cursor: pointer" onclick="showNotify('Техникалық қолдау: +7 707 333 84 97')">Ұмыттыңыз ба?</span>
+        </div>
+        <button class="btn-submit" type="button" onclick="login()">Кіру</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="reviewModal">
+    <div class="modal" style="max-width: 500px">
+      <button class="modal-close" type="button" onclick="closeReviewModal()">✕</button>
+      <h3>Пікір қалдыру</h3>
+      <div style="font-size: 13px; color: var(--muted); margin-bottom: 20px">Тәжірибеңізбен бөлісіңіз</div>
+
+      <div class="form-group">
+        <label>Баға</label>
+        <div class="star-rating" id="starRating">
+          <button class="star-btn" type="button" onclick="setStars(1)">★</button>
+          <button class="star-btn" type="button" onclick="setStars(2)">★</button>
+          <button class="star-btn" type="button" onclick="setStars(3)">★</button>
+          <button class="star-btn" type="button" onclick="setStars(4)">★</button>
+          <button class="star-btn" type="button" onclick="setStars(5)">★</button>
+        </div>
+        <div id="starLabel" style="font-size: 12px; color: var(--muted); margin-top: 4px">Жұлдыз таңдаңыз</div>
+      </div>
+
+      <div class="form-group">
+        <label>Сатып алған көлік</label>
+        <input id="rev-car" type="text" placeholder="Мысалы: Toyota Camry 2023" />
+      </div>
+
+      <div class="form-group">
+        <label>Пікіріңіз</label>
+        <textarea id="rev-text" placeholder="AutoKZ туралы пікіріңізді жазыңыз..." style="min-height: 100px"></textarea>
+      </div>
+
+      <button class="btn-submit" type="button" onclick="submitReview()">Жіберу</button>
+    </div>
+  </div>
+
+  <header>
+    <div class="header-inner">
+      <a href="#" class="logo">AUTO<span>KZ</span></a>
+
+      <nav aria-label="Негізгі">
+        <a href="#cars">Каталог</a>
+        <a href="#features">Неліктен біз?</a>
+        <a href="#address">Мекенжай</a>
+        <a href="#reviews">Пікірлер</a>
+        <a href="#contact">Байланыс</a>
+      </nav>
+
+      <div class="header-contacts">
+        <a href="tel:+77073338497" class="header-phone" title="Қоңырау">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+          </svg>
+          +7 707 333 84 97
+        </a>
+
+        <button class="btn-login-header" id="headerAuthBtn" type="button" onclick="openAuthModal()">Кіру</button>
+
+        <a href="https://wa.me/77073338497" target="_blank" rel="noopener" class="btn-whatsapp">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12 2a10 10 0 00-8.485 15.26L2 22l4.88-1.49A10 10 0 1012 2z"/>
+          </svg>
+          WhatsApp
+        </a>
+
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Мәзір">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">2 400+ автокөлік</div>
+      <h1>
+        <span class="line1">Арманыңдағы</span>
+        <span class="line2">автокөлік</span>
+        <span class="line3">AutoKZ-де</span>
+      </h1>
+      <p class="hero-desc">
+        Қазақстанның №1 онлайн авто маркеті. Тексерілген автокөліктер, кредит мүмкіндігі, жылдам байланыс және бүкіл Қазақстан бойынша жеткізу.
+      </p>
+      <div class="hero-actions">
+        <a href="#cars" class="btn-primary">Каталогты қарау</a>
+        <a href="https://wa.me/77073338497" target="_blank" rel="noopener" class="btn-secondary">Кеңес алу</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num" data-count="2400">0</div>
+          <div class="stat-label">Автокөлік</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-count="12000">0</div>
+          <div class="stat-label">Сатылды</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">4.9★</div>
+          <div class="stat-label">Рейтинг</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">8</div>
+          <div class="stat-label">Жыл тәжірибе</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-car" aria-hidden="true">
+      <div class="hero-car-glow"></div>
+      <img src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=1600&q=80" alt="" loading="eager" decoding="async" />
+    </div>
+
+    <div class="hero-scroll"><div class="scroll-arrow"></div><span>Төменге</span></div>
+  </section>
+
+  <section class="cars-section" id="cars">
+    <div class="section-header">
+      <div class="section-title">Автокөліктер <span>Каталогы</span></div>
+      <a href="#cars" class="see-all">Барлығы</a>
+    </div>
+    <div class="filter-tabs" id="filterTabs">
+      <button class="filter-tab active" type="button" onclick="setFilter('all', this)">Барлығы</button>
+      <button class="filter-tab" type="button" onclick="setFilter('new', this)">Жаңа</button>
+      <button class="filter-tab" type="button" onclick="setFilter('used', this)">Қолданылған</button>
+      <button class="filter-tab" type="button" onclick="setFilter('credit', this)">Кредит</button>
+      <button class="filter-tab" type="button" onclick="setFilter('suv', this)">Кроссовер</button>
+      <button class="filter-tab" type="button" onclick="setFilter('sedan', this)">Седан</button>
+    </div>
+    <div class="cars-grid" id="carsGrid"></div>
+  </section>
+
+  <section class="features-section" id="features">
+    <div class="section-header">
+      <div class="section-title">Неліктен <span>AutoKZ?</span></div>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">✓</div>
+        <div class="feature-title">Тексерілген сапа</div>
+        <div class="feature-desc">Әрбір автокөлік көп параметр бойынша тексеріледі. Толық тарих, ашық ақпарат.</div>
+        <div class="feature-stat">150+</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">%</div>
+        <div class="feature-title">Кредит</div>
+        <div class="feature-desc">Банк шешімі мен мүмкіндіктер бойынша менеджер сүйемелдейді (нақты шарттар банкке байланысты).</div>
+        <div class="feature-stat">0%*</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">↺</div>
+        <div class="feature-title">Trade-in</div>
+        <div class="feature-desc">Ескі көлігіңізді бағалау және жаңаға ауыстыру процесін жеңілдетеміз.</div>
+        <div class="feature-stat">+15%</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⏱</div>
+        <div class="feature-title">Жеткізу</div>
+        <div class="feature-desc">Қала ішінде және аймақтарға жеткізу мүмкіндігі (шартпен).</div>
+        <div class="feature-stat">1–3 күн</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡</div>
+        <div class="feature-title">Кепілдік</div>
+        <div class="feature-desc">Көлік түріне байланысты кепілдік пакеттер.</div>
+        <div class="feature-stat">1 жыл</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">24</div>
+        <div class="feature-title">Қолдау</div>
+        <div class="feature-desc">WhatsApp және телефон арқылы жылдам байланыс.</div>
+        <div class="feature-stat">24/7</div>
+      </div>
+    </div>
+    <div style="padding: 0 40px 10px; color: var(--muted); font-size: 12px; max-width: 1100px; margin: 0 auto">
+      * Маркетингтік мәтін демо үшін. Нақты шарттарды менеджерден растаңыз.
+    </div>
+  </section>
+
+  <section class="address-section" id="address">
+    <div class="section-header">
+      <div class="section-title">Мекен<span>жайымыз</span></div>
+    </div>
+    <div class="address-card">
+      <div class="address-info">
+        <h2>Бізді <span>табыңыз</span></h2>
+        <div class="address-row">
+          <div class="address-icon">📍</div>
+          <div class="address-text">
+            <strong>Мекенжай</strong>
+            <span>Алматы қ., Абай даңғылы 150<br />«Алматы Плаза» БО жанында, 2-қабат <em style="color: var(--muted)">(демо)</em></span>
+          </div>
+        </div>
+        <div class="address-row">
+          <div class="address-icon">🕐</div>
+          <div class="address-text">
+            <strong>Жұмыс уақыты</strong>
+            <span>Дүйсенбі – Жексенбі<br />09:00 – 21:00</span>
+          </div>
+        </div>
+        <div class="address-row">
+          <div class="address-icon">📞</div>
+          <div class="address-text">
+            <strong>Телефон</strong>
+            <span><a href="tel:+77073338497" style="color: var(--gold); text-decoration: none">+7 707 333 84 97</a></span>
+          </div>
+        </div>
+        <div class="address-row">
+          <div class="address-icon">✉</div>
+          <div class="address-text">
+            <strong>Email</strong>
+            <span><a href="mailto:info@autokz.kz" style="color: var(--gold); text-decoration: none">info@autokz.kz</a></span>
+          </div>
+        </div>
+        <div class="address-wa-block">
+          <p>Тез жауап алу үшін WhatsApp-қа жазыңыз.</p>
+          <a href="https://wa.me/77073338497" target="_blank" rel="noopener" class="btn-wa-big">WhatsApp-та жазу</a>
+        </div>
+      </div>
+      <div class="address-map">
+        <iframe class="map-iframe" title="Карта" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Almaty+Abay+Avenue+150&output=embed"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="reviews-section" id="reviews">
+    <div class="section-header">
+      <div class="section-title">Тұтынушы <span>Пікірлері</span></div>
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+        <span style="font-family: Orbitron, sans-serif; font-size: 24px; font-weight: 700; color: var(--gold)" id="avgRating">4.9</span>
+        <span style="color: var(--gold); font-size: 16px">★★★★★</span>
+        <span style="font-size: 13px; color: var(--muted)" id="reviewCount">1 200+ пікір</span>
+      </div>
+    </div>
+
+    <div class="reviews-scroll" id="reviewsScroll"></div>
+
+    <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap">
+      <button class="add-review-btn" type="button" onclick="handleAddReview()">Пікір қалдыру</button>
+      <div id="reviewLoginHint" style="font-size: 13px; color: var(--muted)">
+        Пікір қалдыру үшін <span style="color: var(--gold); cursor: pointer; font-weight: 700" onclick="openAuthModal()">тіркелу</span> қажет
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section" id="contact">
+    <div class="cta-card">
+      <div class="cta-title">Армандағы <span>көлігіңізді</span> табыңыз</div>
+      <div class="cta-desc">Тегін кеңес алыңыз. Менеджерлеріміз WhatsApp, телефон немесе салонда сізге көмектеседі.</div>
+      <div class="cta-actions">
+        <a href="https://wa.me/77073338497" target="_blank" rel="noopener" class="btn-wa-big">WhatsApp</a>
+        <a href="tel:+77073338497" class="btn-primary">Қоңырау шалу</a>
+        <a href="#cars" class="btn-secondary">Каталогқа өту</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">AUTO<span style="color: #fff; font-weight: 400">KZ</span></div>
+        <p class="footer-desc">Қазақстандағы онлайн авто маркет демо-версиясы. Деректердің бір бөлігі браузерде сақталады (localStorage).</p>
+        <div class="footer-socials">
+          <a href="#" class="social-btn" aria-label="Facebook">f</a>
+          <a href="#" class="social-btn" aria-label="Instagram">in</a>
+          <a href="#" class="social-btn" aria-label="Telegram">tg</a>
+          <a href="https://wa.me/77073338497" target="_blank" rel="noopener" class="social-btn" aria-label="WhatsApp">wa</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Каталог</h4>
+        <a href="#cars">Жаңа автокөліктер</a>
+        <a href="#cars">Қолданылған</a>
+        <a href="#cars">Кроссоверлер</a>
+        <a href="#cars">Седандар</a>
+      </div>
+      <div class="footer-col">
+        <h4>Қызметтер</h4>
+        <a href="#features">Кредит</a>
+        <a href="#features">Trade-in</a>
+        <a href="#features">Техтексеру</a>
+        <a href="#features">Жеткізу</a>
+      </div>
+      <div class="footer-col">
+        <h4>Байланыс</h4>
+        <a href="tel:+77073338497">+7 707 333 84 97</a>
+        <a href="https://wa.me/77073338497" target="_blank" rel="noopener" style="color: #22c55e !important">WhatsApp</a>
+        <a href="mailto:info@autokz.kz">info@autokz.kz</a>
+        <a href="#address">Абай д. 150, Алматы</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> AutoKZ · Барлық құқықтар қорғалған</span>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap">
+        <a href="#">Құпиялылық саясаты</a>
+        <a href="#">Пайдалану шарттары</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const SUPABASE_URL = "YOUR_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+    const LS = { user: "autokz_user_v1", favs: "autokz_favs_v1", reviews: "autokz_reviews_v1", leads: "autokz_leads_v1" };
+
+    const LOCAL_CARS = [
+      {
+        id: 1,
+        name: "Toyota Camry",
+        year: 2023,
+        price: 18500000,
+        brand: "Toyota",
+        transmission: "Автомат",
+        engine: "2.5L Бензин",
+        mileage: "15 000 км",
+        type: "sedan",
+        condition: "used",
+        credit: true,
+        badge: "hot",
+        img: "https://tse3.mm.bing.net/th/id/OIP.yhym-S3Rp1nGXKMXWiQ5qgHaE8?rs=1&pid=ImgDetMain&o=7&rm=3",
+        imgFallback:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/2021_Toyota_Camry_%28facelift%2C_petrol%29%2C_front_8.28.21.jpg/1280px-2021_Toyota_Camry_%28facelift%2C_petrol%29%2C_front_8.28.21.jpg",
+      },
+      {
+        id: 2,
+        name: "Hyundai Tucson",
+        year: 2024,
+        price: 16200000,
+        brand: "Hyundai",
+        transmission: "Автомат",
+        engine: "2.0L Бензин",
+        mileage: "0 км",
+        type: "suv",
+        condition: "new",
+        credit: true,
+        badge: "new",
+        img: "https://soymotor.com/sites/default/files/2023-11/hyundai-tucson-2024-soymotor_2.jpg",
+        imgFallback:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/2022_Hyundai_Tucson_NX4_FL_2.0_Smartstream_GDi_%28NX4%29_%28facelift%2C_2024%29%2C_front_8.28.24.jpg/1280px-2022_Hyundai_Tucson_NX4_FL_2.0_Smartstream_GDi_%28NX4%29_%28facelift%2C_2024%29%2C_front_8.28.24.jpg",
+      },
+      {
+        id: 3,
+        name: "BMW 5 Series",
+        year: 2022,
+        price: 32000000,
+        brand: "BMW",
+        transmission: "Автомат",
+        engine: "2.0L Бензин",
+        mileage: "42 000 км",
+        type: "sedan",
+        condition: "used",
+        credit: false,
+        badge: "hot",
+        img: "https://mediapool.bmwgroup.com/cache/P9/202005/P90388586/P90388586-the-new-bmw-5-series-sedan-m-performance-parts-05-2020-2121px.jpg",
+        imgFallback:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/2021_BMW_530i_%28G30_LCI%2C_facelift_2020%29_sedan_%282021-06-11%29_01.jpg/1280px-2021_BMW_530i_%28G30_LCI%2C_facelift_2020%29_sedan_%282021-06-11%29_01.jpg",
+      },
+      {
+        id: 4,
+        name: "Kia Sportage",
+        year: 2024,
+        price: 14800000,
+        brand: "Kia",
+        transmission: "Автомат",
+        engine: "1.6T Бензин",
+        mileage: "0 км",
+        type: "suv",
+        condition: "new",
+        credit: true,
+        badge: "new",
+        img: "https://th.bing.com/th/id/R.e8d14ac235a3803228b40fff9ef74af4?rik=2AS5WKGA0wX2Sg&riu=http%3a%2f%2fthegioitieudung.net%2fwp-content%2fuploads%2f2025%2f03%2fkia-sportage-2027-1.jpg&ehk=wndNjNY4yEqnaECVRR5fzDhkSxX1DLA2wstNwCrCywA%3d&risl=&pid=ImgRaw&r=0",
+        imgFallback:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/2022_Kia_Sportage_%28NQ5%29_2.0_GT-Line_SUV_%282022-08-11%29_01.jpg/1280px-2022_Kia_Sportage_%28NQ5%29_2.0_GT-Line_SUV_%282022-08-11%29_01.jpg",
+      },
+      {
+        id: 5,
+        name: "Lexus RX 350",
+        year: 2021,
+        price: 28500000,
+        brand: "Lexus",
+        transmission: "Автомат",
+        engine: "3.5L Бензин",
+        mileage: "55 000 км",
+        type: "suv",
+        condition: "used",
+        credit: false,
+        badge: "",
+        img: "https://images.dealer.com/ddc/vehicles/2023/Lexus/RX%20350/SUV/perspective/front-left/2023_24.png",
+        imgFallback:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/2020_Lexus_RX_350_F-Sport_%28facelift%2C_black%29%2C_front_8.6.19.jpg/1280px-2020_Lexus_RX_350_F-Sport_%28facelift%2C_black%29%2C_front_8.6.19.jpg",
+      },
+      {
+        id: 6,
+        name: "Mercedes GLE",
+        year: 2023,
+        price: 45000000,
+        brand: "Mercedes",
+        transmission: "Автомат",
+        engine: "2.0T Бензин",
+        mileage: "12 000 км",
+        type: "suv",
+        condition: "used",
+        credit: true,
+        badge: "hot",
+        img: "https://tse2.mm.bing.net/th/id/OIP.5YSezfF9klSnutUfhyNhogHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
+        imgFallback:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/2019_Mercedes-Benz_GLE_400d_AMG_Line_4MATIC_Premium_Plus_%28W167%29%2C_front_8.26.19.jpg/1280px-2019_Mercedes-Benz_GLE_400d_AMG_Line_4MATIC_Premium_Plus_%28W167%29%2C_front_8.26.19.jpg",
+      },
+      {
+        id: 7,
+        name: "Honda CR-V",
+        year: 2023,
+        price: 17900000,
+        brand: "Honda",
+        transmission: "Автомат",
+        engine: "1.5T Бензин",
+        mileage: "8 000 км",
+        type: "suv",
+        condition: "used",
+        credit: true,
+        badge: "",
+        img: "https://tse3.mm.bing.net/th/id/OIP.Dboio0xJuHa28zHYJH8WNwHaEP?rs=1&pid=ImgDetMain&o=7&rm=3",
+        imgFallback:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/2023_Honda_CR-V_EX%2C_front_9.30.22.jpg/1280px-2023_Honda_CR-V_EX%2C_front_9.30.22.jpg",
+      },
+      {
+        id: 8,
+        name: "Haval Jolion",
+        year: 2024,
+        price: 9800000,
+        brand: "Haval",
+        transmission: "Автомат",
+        engine: "1.5T Бензин",
+        mileage: "0 км",
+        type: "suv",
+        condition: "new",
+        credit: true,
+        badge: "new",
+        img: "https://tse2.mm.bing.net/th/id/OIP.A_0_lJgkO6yX8RuvZqjdDgHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
+        imgFallback:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/2021_Haval_Jolion_1.5T_DCT_Elite%2C_front_11.3.21.jpg/1280px-2021_Haval_Jolion_1.5T_DCT_Elite%2C_front_11.3.21.jpg",
+      },
+    ];
+
+    let cars = structuredClone(LOCAL_CARS);
+    let currentFilter = "all";
+    const favorites = new Set();
+    let currentUser = null;
+    let selectedStars = 0;
+
+    const STATIC_REVIEWS_HTML = `
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">Өте жақсы қызмет! Toyota Camry алдым, барлық процесс 2 күн ішінде аяқталды.</div>
+      <div class="review-author">
+        <div class="review-avatar">АС</div>
+        <div>
+          <div class="review-name">Асқар Сейткали</div>
+          <div class="review-date">15 қараша 2024</div>
+          <div class="review-car">Toyota Camry 2023</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">WhatsApp арқылы хабарластым, сол күні-ақ жауап берді. Tucson үшін рахмет!</div>
+      <div class="review-author">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6)">ДМ</div>
+        <div>
+          <div class="review-name">Динара Мамытова</div>
+          <div class="review-date">3 желтоқсан 2024</div>
+          <div class="review-car">Hyundai Tucson 2024</div>
+        </div>
+      </div>
+    </div>`;
+
+  function lsGet(key, fallback) {
+  try {
+    const v = localStorage.getItem(key);
+    return v ? JSON.parse(v) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+function lsSet(key, val) {
+  localStorage.setItem(key, JSON.stringify(val));
+}
+
+function loadFavs() {
+  return new Set(lsGet(LS.favs, []));
+}
+function saveFavs(set) {
+  lsSet(LS.favs, Array.from(set));
+}
+
+function loadUser() {
+  return lsGet(LS.user, null);
+}
+function saveUser(u) {
+  if (!u) localStorage.removeItem(LS.user);
+  else lsSet(LS.user, u);
+}
+
+function loadReviews() {
+  return lsGet(LS.reviews, []);
+}
+function saveReviews(list) {
+  lsSet(LS.reviews, list.slice(0, 200));
+}
+
+function pushLead(lead) {
+  const list = lsGet(LS.leads, []);
+  list.unshift({ ...lead, ts: Date.now(), id: "L" + Date.now() });
+  lsSet(LS.leads, list.slice(0, 200));
+}
+
+function formatPrice(p) {
+  if (p >= 1000000) return (p / 1000000).toFixed(1).replace(".0", "") + " млн ₸";
+  return p.toLocaleString("kk-KZ") + " ₸";
+}
+
+function showNotify(msg) {
+  const n = document.getElementById("notify");
+  document.getElementById("notify-text").textContent = msg;
+  n.classList.add("show");
+  clearTimeout(showNotify._t);
+  showNotify._t = setTimeout(() => n.classList.remove("show"), 3500);
+}
+
+function renderCars(list) {
+  const grid = document.getElementById("carsGrid");
+  grid.innerHTML = "";
+  if (!list.length) {
+    grid.innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);font-size:16px;">Автокөлік табылмады</div>';
+    return;
+  }
+  const favs = loadFavs();
+  list.forEach((c, i) => {
+    const isFav = favs.has(c.id);
+    const delay = i * 80;
+    let badges = "";
+    if (c.badge === "new") badges += '<span class="badge badge-new">Жаңа</span>';
+    if (c.badge === "hot") badges += '<span class="badge badge-hot">Хит</span>';
+    if (c.credit) badges += '<span class="badge badge-credit">Кредит</span>';
+    grid.insertAdjacentHTML(
+      "beforeend",
+      `
+      <div class="car-card" style="animation-delay:${delay}ms">
+        <div class="car-img-wrap">
+          <img src="${c.img}" alt="${c.name}"
+            onerror="this.onerror=null;this.src='${c.imgFallback}';"
+            loading="lazy" decoding="async" />
+          <div class="car-badges">${badges}</div>
+          <button class="car-favorite" type="button" onclick="toggleFav(${c.id}, this)" title="Таңдаулы">${isFav ? "♥" : "♡"}</button>
+        </div>
+        <div class="car-info">
+          <div class="car-name">${c.name}</div>
+          <div class="car-meta">
+            <span>${c.year}</span>
+            <span>${c.mileage}</span>
+            <span>${c.transmission}</span>
+          </div>
+          <div class="car-price">${formatPrice(c.price)}</div>
+          <div class="car-specs">
+            <span class="spec">${c.engine}</span>
+            <span class="spec">${c.condition === "new" ? "Жаңа" : "Қолданылған"}</span>
+            <span class="spec">Алматы</span>
+          </div>
+          <div class="car-actions">
+            <button class="btn-card-primary" type="button" onclick="openModal('${String(c.name).replace(/'/g, "\\'")} ${c.year}')">Тапсырыс</button>
+            <a class="btn-card-wa" href="https://wa.me/77073338497?text=${encodeURIComponent("Сәлем! " + c.name + " " + c.year + " туралы сұрақ бар")}" target="_blank" rel="noopener" title="WhatsApp">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12 2a10 10 0 00-8.485 15.26L2 22l4.88-1.49A10 10 0 1012 2z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>`
+    );
+  });
+}
+
+function filterCars() {
+  let list = [...cars];
+  if (currentFilter === "new") list = list.filter((c) => c.condition === "new");
+  else if (currentFilter === "used") list = list.filter((c) => c.condition === "used");
+  else if (currentFilter === "credit") list = list.filter((c) => c.credit);
+  else if (currentFilter === "suv") list = list.filter((c) => c.type === "suv");
+  else if (currentFilter === "sedan") list = list.filter((c) => c.type === "sedan");
+  renderCars(list);
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll(".filter-tab").forEach((t) => t.classList.remove("active"));
+  btn.classList.add("active");
+  filterCars();
+}
+
+function toggleFav(id, btn) {
+  const favs = loadFavs();
+  if (favs.has(id)) {
+    favs.delete(id);
+    btn.textContent = "♡";
+    showNotify("Таңдаулылардан алынды");
+  } else {
+    favs.add(id);
+    btn.textContent = "♥";
+    showNotify("Таңдаулыларға қосылды");
+  }
+  saveFavs(favs);
+}
+
+function openModal(carName) {
+  document.getElementById("modal-car-name").textContent = carName;
+  document.getElementById("modal").classList.add("open");
+}
+function closeModal() {
+  document.getElementById("modal").classList.remove("open");
+}
+document.getElementById("modal").addEventListener("click", (e) => {
+  if (e.target.id === "modal") closeModal();
+});
+
+function submitOrder() {
+  const name = document.getElementById("ord-name").value.trim();
+  const phone = document.getElementById("ord-phone").value.trim();
+  const channel = document.getElementById("ord-channel").value;
+  const message = document.getElementById("ord-msg").value.trim();
+  if (phone.length < 6) return showNotify("Телефонды толтырыңыз");
+  pushLead({ type: "order", car: document.getElementById("modal-car-name").textContent, name, phone, channel, message });
+  closeModal();
+  document.getElementById("ord-name").value = "";
+  document.getElementById("ord-phone").value = "";
+  document.getElementById("ord-msg").value = "";
+  showNotify("Тапсырыс сақталды");
+}
+
+function openAuthModal() {
+  document.getElementById("authModal").classList.add("open");
+}
+function closeAuthModal() {
+  document.getElementById("authModal").classList.remove("open");
+}
+document.getElementById("authModal").addEventListener("click", (e) => {
+  if (e.target.id === "authModal") closeAuthModal();
+});
+
+function switchTab(tab) {
+  document.getElementById("registerForm").style.display = tab === "register" ? "block" : "none";
+  document.getElementById("loginForm").style.display = tab === "login" ? "block" : "none";
+  document.getElementById("tabRegister").classList.toggle("active", tab === "register");
+  document.getElementById("tabLogin").classList.toggle("active", tab === "login");
+  document.getElementById("authTitle").textContent = tab === "register" ? "Тіркелу" : "Кіру";
+}
+
+function initialsFromName(name) {
+  return name
+    .trim()
+    .split(/\s+/)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+}
+
+function register() {
+  const name = document.getElementById("reg-name").value.trim();
+  const phone = document.getElementById("reg-phone").value.trim();
+  const email = document.getElementById("reg-email").value.trim();
+  const pass = document.getElementById("reg-pass").value;
+  const pass2 = document.getElementById("reg-pass2").value;
+  if (!name) return showNotify("Атыңызды енгізіңіз");
+  if (!email && !phone) return showNotify("Email немесе телефон енгізіңіз");
+  if (pass.length < 6) return showNotify("Құпия сөз кемінде 6 таңба");
+  if (pass !== pass2) return showNotify("Құпия сөздер сәйкес емес");
+  currentUser = { name, email: email || phone, initials: initialsFromName(name || email || phone) };
+  saveUser(currentUser);
+  closeAuthModal();
+  updateUserUI();
+  showNotify("Тіркелу сәтті");
+}
+
+function login() {
+  const id = document.getElementById("login-id").value.trim();
+  const pass = document.getElementById("login-pass").value;
+  if (!id || !pass) return showNotify("Барлық өрістерді толтырыңыз");
+  const base = id.includes("@") ? id.split("@")[0] : id;
+  const displayName = base.charAt(0).toUpperCase() + base.slice(1);
+  currentUser = { name: displayName, email: id, initials: initialsFromName(displayName) };
+  saveUser(currentUser);
+  closeAuthModal();
+  updateUserUI();
+  showNotify("Қош келдіңіз");
+}
+
+function logout() {
+  if (!confirm("Шығу керек пе?")) return;
+  currentUser = null;
+  saveUser(null);
+  updateUserUI();
+  showNotify("Сіз шықтыңыз");
+}
+
+function updateUserUI() {
+  const btn = document.getElementById("headerAuthBtn");
+  const hint = document.getElementById("reviewLoginHint");
+  if (currentUser) {
+    btn.innerHTML = `<span class="user-badge"><span class="user-dot"></span>${currentUser.name}</span>`;
+    btn.onclick = logout;
+    if (hint) hint.style.display = "none";
+  } else {
+    btn.textContent = "Кіру";
+    btn.onclick = openAuthModal;
+    if (hint) hint.style.display = "block";
+  }
+}
+
+function handleAddReview() {
+  if (!currentUser) {
+    openAuthModal();
+    return;
+  }
+  selectedStars = 0;
+  updateStars(0);
+  document.getElementById("rev-car").value = "";
+  document.getElementById("rev-text").value = "";
+  document.getElementById("reviewModal").classList.add("open");
+}
+function closeReviewModal() {
+  document.getElementById("reviewModal").classList.remove("open");
+}
+document.getElementById("reviewModal").addEventListener("click", (e) => {
+  if (e.target.id === "reviewModal") closeReviewModal();
+});
+
+function setStars(n) {
+  selectedStars = n;
+  updateStars(n);
+  const labels = ["", "Нашар", "Қанағаттандырарлық", "Жақсы", "Өте жақсы", "Тамаша"];
+  document.getElementById("starLabel").textContent = labels[n];
+}
+function updateStars(n) {
+  document.querySelectorAll(".star-btn").forEach((btn, i) => btn.classList.toggle("active", i < n));
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function renderReviewRail() {
+  const scroll = document.getElementById("reviewsScroll");
+  const saved = loadReviews()
+    .map((r) => {
+      const starsStr = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
+      const grad = r.color || "linear-gradient(135deg,#4221ff,#5165ff)";
+      return `
+      <div class="review-card" style="border-color:rgba(66,33,255,0.35)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div class="review-stars">${starsStr}</div>
+          <span style="font-size:11px;background:rgba(66,33,255,0.15);color:var(--gold);padding:3px 8px;border-radius:20px;font-weight:800;">Сақталған</span>
+        </div>
+        <div class="review-text">${escapeHtml(r.text)}</div>
+        <div class="review-author">
+          <div class="review-avatar" style="background:${grad}">${escapeHtml(r.initials)}</div>
+          <div>
+            <div class="review-name">${escapeHtml(r.userName)}</div>
+            <div class="review-date">${escapeHtml(r.dateStr)}</div>
+            ${r.carName ? `<div class="review-car">${escapeHtml(r.carName)}</div>` : ""}
+          </div>
+        </div>
+      </div>`;
+    })
+    .join("");
+  scroll.innerHTML = saved + STATIC_REVIEWS_HTML;
+}
+
+function submitReview() {
+  if (!currentUser) return openAuthModal();
+  const carName = document.getElementById("rev-car").value.trim();
+  const text = document.getElementById("rev-text").value.trim();
+  if (selectedStars === 0) return showNotify("Жұлдыз таңдаңыз");
+  if (!text) return showNotify("Пікіріңізді жазыңыз");
+
+  const colors = [
+    "linear-gradient(135deg,#4221ff,#5165ff)",
+    "linear-gradient(135deg,#22c55e,#16a34a)",
+    "linear-gradient(135deg,#f59e0b,#d97706)",
+    "linear-gradient(135deg,#e03060,#be185d)",
+    "linear-gradient(135deg,#3b82f6,#8b5cf6)",
+  ];
+  const now = new Date();
+  const months = ["қаңтар","ақпан","наурыз","сәуір","мамыр","маусым","шілде","тамыз","қыркүйек","қазан","қараша","желтоқсан"];
+  const dateStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+  const item = {
+    rating: selectedStars,
+    text,
+    carName,
+    userName: currentUser.name,
+    initials: currentUser.initials,
+    dateStr,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    ts: Date.now(),
+  };
+  const list = loadReviews();
+  list.unshift(item);
+  saveReviews(list);
+
+  closeReviewModal();
+  renderReviewRail();
+  showNotify("Пікір сақталды");
+  document.getElementById("reviewsScroll").scrollTo({ left: 0, behavior: "smooth" });
+}
+
+async function tryLoadCarsFromSupabase() {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY || SUPABASE_URL.includes("YOUR_")) return false;
+  try {
+    const url = `${SUPABASE_URL.replace(/\/$/, "")}/rest/v1/cars?select=*`;
+    const res = await fetch(url, {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (!Array.isArray(data) || !data.length) return false;
+    cars = data;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function createParticles() {
+  const container = document.getElementById("particles");
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement("div");
+    p.className = "particle";
+    p.style.left = Math.random() * 100 + "%";
+    p.style.animationDuration = 8 + Math.random() * 12 + "s";
+    p.style.animationDelay = Math.random() * 8 + "s";
+    p.style.opacity = String(0.3 + Math.random() * 0.5);
+    p.style.width = p.style.height = 1 + Math.random() * 2 + "px";
+    container.appendChild(p);
+  }
+}
+
+function animateCounters() {
+  document.querySelectorAll("[data-count]").forEach((el) => {
+    const target = parseInt(el.dataset.count, 10);
+    let cur = 0;
+    const step = Math.max(1, Math.ceil(target / 60));
+    const t = setInterval(() => {
+      cur += step;
+      if (cur >= target) {
+        cur = target;
+        clearInterval(t);
+      }
+      el.textContent = cur.toLocaleString("kk-KZ") + "+";
+    }, 30);
+  });
+}
+
+function wireDrawer() {
+  const drawer = document.getElementById("drawer");
+  const open = () => {
+    drawer.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+  };
+  const close = () => {
+    drawer.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+  };
+  document.getElementById("menuToggle").addEventListener("click", open);
+  document.getElementById("drawerBackdrop").addEventListener("click", close);
+  document.getElementById("drawerClose").addEventListener("click", close);
+  drawer.querySelectorAll("a[href^='#']").forEach((a) => a.addEventListener("click", close));
+}
+
+window.addEventListener("load", async () => {
+  document.getElementById("year").textContent = String(new Date().getFullYear());
+  createParticles();
+  wireDrawer();
+
+  currentUser = loadUser();
+  loadFavs().forEach((id) => favorites.add(id));
+  updateUserUI();
+
+  const ok = await tryLoadCarsFromSupabase();
+  if (!ok) cars = structuredClone(LOCAL_CARS);
+
+  filterCars();
+  renderReviewRail();
+
+  setTimeout(() => {
+    const loader = document.getElementById("loader");
+    loader.style.opacity = "0";
+    setTimeout(() => {
+      loader.style.display = "none";
+      animateCounters();
+    }, 500);
+  }, 1200);
+});
+  </script>
+</body>
+</html>
